@@ -12,18 +12,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.pokemongpt.databinding.PokedexFragmentBinding;
+import com.example.pokemongpt.databinding.PokemonDetailsBinding;
 
-public class PokemonFragment extends Fragment {
+public class PokemonDetailsFragment extends Fragment {
+    Pokemon pokemon;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        PokedexFragmentBinding binding = DataBindingUtil.inflate(inflater,
-                R.layout.pokemon_fragment, container, false);
-
-        binding.pokemonList.setLayoutManager(new LinearLayoutManager(
-                binding.getRoot().getContext()));
+        PokemonDetailsBinding binding = DataBindingUtil.inflate(inflater,
+                R.layout.pokemon_details, container, false);
 
         return binding.getRoot();
     }

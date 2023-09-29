@@ -42,4 +42,6 @@ public class PokemonViewModel extends BaseObservable {
         else
             return null;
     }
+    public int getHeight() { return pokemon.getHeight(); }
+    public int getWeight() { return pokemon.getWeight(); }
 }
