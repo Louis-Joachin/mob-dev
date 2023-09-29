@@ -1,5 +1,6 @@
 package com.example.pokemongpt;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
@@ -19,8 +20,20 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         PokedexFragment fragment = new PokedexFragment();
+        OnClickOnPokemonListener listener = new OnClickOnPokemonListener(){
+
+            @Override
+            public void onClickOnNote(long noteId, String number){
+                showNoteDetail(noteId, number);
+            }
+        };
+        fragment.setOnClickOnNoteListener(listener);
         transaction.replace(R.id.fragment_container,fragment);
         transaction.commit();
+    }
+
+    private void showNoteDetail(long noteId,String number) {
+        System.out.println(number);
     }
 
 }

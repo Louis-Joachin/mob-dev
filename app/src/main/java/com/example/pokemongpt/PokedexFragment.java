@@ -25,12 +25,13 @@ import java.util.List;
 
 public class PokedexFragment extends Fragment {
     List<Pokemon> pokemonList = new ArrayList<>();
+    PokedexFragmentBinding binding =null;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        PokedexFragmentBinding binding = DataBindingUtil.inflate(inflater,
+        binding = DataBindingUtil.inflate(inflater,
                 R.layout.pokedex_fragment, container, false);
 
         binding.pokemonList.setLayoutManager(new LinearLayoutManager(
@@ -39,7 +40,7 @@ public class PokedexFragment extends Fragment {
         this.importPokemonList(binding);
         PokemonListAdapter adapter = new PokemonListAdapter(pokemonList);
         binding.pokemonList.setAdapter(adapter);
-
+        adapter.setOnClickOnNoteListener(listener);
         return binding.getRoot();
     }
 
@@ -86,4 +87,12 @@ public class PokedexFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+    private OnClickOnPokemonListener listener;
+    public void setOnClickOnNoteListener(OnClickOnPokemonListener listener)
+    {
+        this.listener = listener;
+    }
+
+
 }
