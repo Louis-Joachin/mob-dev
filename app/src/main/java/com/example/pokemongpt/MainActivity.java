@@ -13,7 +13,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        this.showStartup();
+        this.showDetails();
+    }
+
+    public void showDetails() {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        PokemonDetailsFragment fragment = new PokemonDetailsFragment();
+        transaction.replace(R.id.fragment_container,fragment);
+        transaction.commit();
     }
     public void showStartup() {
         FragmentManager manager = getSupportFragmentManager();
