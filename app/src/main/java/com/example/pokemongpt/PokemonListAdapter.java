@@ -1,6 +1,7 @@
 package com.example.pokemongpt;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,8 @@ import java.util.List;
 public class PokemonListAdapter extends
         RecyclerView.Adapter<PokemonListAdapter.ViewHolder> {
     List<Pokemon> pokemonList;
+    private OnClickOnPokemonListener listener;
+
     public PokemonListAdapter(List<Pokemon> pokemonList) {
         assert pokemonList != null;
         this.pokemonList =pokemonList;
@@ -35,13 +38,26 @@ public class PokemonListAdapter extends
     public int getItemCount() {
         return pokemonList.size();
     }
-    static class ViewHolder extends RecyclerView.ViewHolder {
+
+    public void setOnClickOnNoteListener(OnClickOnPokemonListener listener) {
+            this.listener = listener;
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
         private PokemonItemBinding binding;
         private PokemonViewModel viewModel = new PokemonViewModel();
         ViewHolder(PokemonItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             this.binding.setPokemonViewModel(viewModel);
+            this.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(listener!=null)
+                        listener.onClickOnNote(0,viewModel.getNumber());
+                }
+            });
+
         }
     }
 }
