@@ -2,6 +2,7 @@ package com.example.pokemongpt;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.annotation.BoolRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -10,22 +11,20 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.pokemongpt.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView
-        .OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationBarView
+        .OnItemSelectedListener {
     private ActivityMainBinding binding;
-    BottomNavigationView bottomNavigationView;
     PokedexFragment pokedexfragment = new PokedexFragment();
+    MapFragment mapfragment = new MapFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        bottomNavigationView
-                = findViewById(R.id.bottom_navigation);
-
-        bottomNavigationView
-                .setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.page_1);
+        binding.bottomNavigation
+                .setOnItemSelectedListener(this);
+        binding.bottomNavigation.setSelectedItemId(R.id.pokedex);
         this.showStartup();
     }
 
@@ -58,22 +57,21 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.page_1:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, pokedexfragment)
-                        .commit();
-                return true;
-
-            case R.id.page_2:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, secondFragment)
-                        .commit();
-                return true;
+        if(item.getItemId() == R.id.pokedex){
+            this.showStartup();
+            /*getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, pokedexfragment)
+                    .commit();*/
+            return true;
+        } else if (item.getItemId() == R.id.map) {
+            System.out.println("appuie Map");
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, mapfragment )
+                    .commit();
+            return true;
         }
-        return false;
         return false;
     }
 }

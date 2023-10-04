@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/page_1"
+        android:id="@+id/pokedex"
         android:enabled="true"
-        android:icon="@drawable/icon_1"
-        android:title="@string/text_label_1"/>
+        android:icon="@drawable/ic_pokemon_foreground"
+        android:title="Pokedex"/>
     <item
-        android:id="@+id/page_2"
+        android:id="@+id/map"
         android:enabled="true"
-        android:icon="@drawable/icon_2"
-        android:title="@string/text_label_2"/>
+        android:icon="@drawable/combat"
+        android:title="Map"/>
 </menu>
