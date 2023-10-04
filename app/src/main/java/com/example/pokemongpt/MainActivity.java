@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = manager.beginTransaction();
         PokemonDetailsFragment fragment = new PokemonDetailsFragment(number);
         transaction.replace(R.id.fragment_container,fragment);
+        transaction.addToBackStack("fragment");
         transaction.commit();
     }
     public void showStartup() {
@@ -38,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
         fragment.setOnClickOnNoteListener(listener);
         transaction.replace(R.id.fragment_container,fragment);
         transaction.commit();
+    }
+
+    public void showMap() {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction= manager.beginTransaction();
+        MapFragment fragment = new MapFragment();
+        transaction.replace(R.id.fragment_container,fragment);
+        transaction.commit();
+
     }
 
     private void showNoteDetail(long noteId,String number) {
