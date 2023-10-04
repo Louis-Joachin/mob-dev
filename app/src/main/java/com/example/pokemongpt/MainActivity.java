@@ -1,20 +1,32 @@
 package com.example.pokemongpt;
 import android.os.Bundle;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.pokemongpt.databinding.ActivityMainBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView
+        .OnNavigationItemSelectedListener {
     private ActivityMainBinding binding;
+    BottomNavigationView bottomNavigationView;
+    PokedexFragment pokedexfragment = new PokedexFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        this.showDetails();
+        bottomNavigationView
+                = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView
+                .setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setSelectedItemId(R.id.page_1);
+        this.showStartup();
     }
 
     public void showDetails() {
@@ -27,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public void showStartup() {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        PokedexFragment fragment = new PokedexFragment();
+
         OnClickOnPokemonListener listener = new OnClickOnPokemonListener(){
 
             @Override
@@ -35,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
                 showNoteDetail(noteId, number);
             }
         };
-        fragment.setOnClickOnNoteListener(listener);
-        transaction.replace(R.id.fragment_container,fragment);
+        pokedexfragment.setOnClickOnNoteListener(listener);
+        transaction.replace(R.id.fragment_container,pokedexfragment);
         transaction.commit();
     }
 
@@ -44,4 +56,24 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(number);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.page_1:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, pokedexfragment)
+                        .commit();
+                return true;
+
+            case R.id.page_2:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, secondFragment)
+                        .commit();
+                return true;
+        }
+        return false;
+        return false;
+    }
 }
