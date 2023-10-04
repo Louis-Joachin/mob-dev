@@ -14,13 +14,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        this.showDetails();
+        this.showStartup();
     }
 
-    public void showDetails() {
+    public void showDetails(long noteId, String number) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        PokemonDetailsFragment fragment = new PokemonDetailsFragment();
+        PokemonDetailsFragment fragment = new PokemonDetailsFragment(number);
         transaction.replace(R.id.fragment_container,fragment);
         transaction.commit();
     }
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClickOnNote(long noteId, String number){
-                showNoteDetail(noteId, number);
+                showDetails(noteId, number);
             }
         };
         fragment.setOnClickOnNoteListener(listener);
