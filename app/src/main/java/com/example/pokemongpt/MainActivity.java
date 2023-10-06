@@ -25,14 +25,15 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         binding.bottomNavigation
                 .setOnItemSelectedListener(this);
         binding.bottomNavigation.setSelectedItemId(R.id.pokedex);
-        this.showStartup();
+
     }
 
-    public void showDetails() {
+    public void showDetails(long noteId, String number) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        PokemonDetailsFragment fragment = new PokemonDetailsFragment();
+        PokemonDetailsFragment fragment = new PokemonDetailsFragment(number);
         transaction.replace(R.id.fragment_container,fragment);
+        transaction.addToBackStack("fragment");
         transaction.commit();
     }
     public void showStartup() {
@@ -43,12 +44,21 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
             @Override
             public void onClickOnNote(long noteId, String number){
-                showNoteDetail(noteId, number);
+                showDetails(noteId, number);
             }
         };
         pokedexfragment.setOnClickOnNoteListener(listener);
         transaction.replace(R.id.fragment_container,pokedexfragment);
         transaction.commit();
+    }
+
+    public void showMap() {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction= manager.beginTransaction();
+        MapFragment fragment = new MapFragment();
+        transaction.replace(R.id.fragment_container,fragment);
+        transaction.commit();
+
     }
 
     private void showNoteDetail(long noteId,String number) {
