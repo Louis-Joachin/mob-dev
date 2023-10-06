@@ -26,6 +26,7 @@ import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -34,6 +35,7 @@ public class MapFragment extends Fragment {
     Context context;    //  MapFragmentBinding binding;
     private MyLocationNewOverlay mLocationOverlay;
     private LocationManager locationManager = null;
+    Marker playerPosition;
 
     public MapFragment(LocationManager locationManager) {
         this.locationManager = locationManager;
@@ -57,11 +59,26 @@ public class MapFragment extends Fragment {
         @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         GeoPoint point = new GeoPoint(location);
         binding.mapView.getController().setCenter(point);
-        binding.mapView.getController().setZoom(13);
+        binding.mapView.getController().setZoom(18);
         binding.mapView.setMultiTouchControls(true);
         binding.mapView.setBuiltInZoomControls(true);
 
+        this.playerPosition = new Marker(binding.mapView);
+        playerPosition.setPosition(point);
+        playerPosition.setAnchor(Marker.ANCHOR_CENTER,Marker.ANCHOR_CENTER);
+        playerPosition.setIcon(getResources().getDrawable(R.drawable.ic_pokemon_foreground));
+        playerPosition.setTitle("Player");
+        binding.mapView.getOverlays().add(playerPosition);
+
         return binding.getRoot();
+    }
+
+    public void updateMap() {
+        @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        GeoPoint point = new GeoPoint(location);
+        this.playerPosition.setPosition(point);
+        binding.mapView.invalidate();
+
     }
 
     @Override

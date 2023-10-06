@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 LocationListener(){
                     @Override
                     public void onLocationChanged(Location newLocation){
+                        mapfragment.updateMap();
                     }
                     @Override
                     public void onStatusChanged(String provider, int
