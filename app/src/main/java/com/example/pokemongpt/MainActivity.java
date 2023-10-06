@@ -1,30 +1,44 @@
 package com.example.pokemongpt;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import androidx.annotation.BoolRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.pokemongpt.databinding.ActivityMainBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.pokemongpt.databinding.MapFragmentBinding;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView
         .OnItemSelectedListener {
     private ActivityMainBinding binding;
     PokedexFragment pokedexfragment = new PokedexFragment();
-    MapFragment mapfragment = new MapFragment();
+
+    LocationManager locationManager;
+    MapFragment mapfragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.askForPermission();
+        this.mapfragment = new MapFragment(locationManager);
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.bottomNavigation
                 .setOnItemSelectedListener(this);
-        binding.bottomNavigation.setSelectedItemId(R.id.pokedex);
+        binding.bottomNavigation.setSelectedItemId(R.id.map);
+
+        this.showMap(locationManager);
 
     }
 
@@ -52,10 +66,10 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         transaction.commit();
     }
 
-    public void showMap() {
+    public void showMap(LocationManager locationManager) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction= manager.beginTransaction();
-        MapFragment fragment = new MapFragment();
+        MapFragment fragment = new MapFragment(locationManager);
         transaction.replace(R.id.fragment_container,fragment);
         transaction.commit();
 
@@ -83,5 +97,62 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             return true;
         }
         return false;
+    }
+
+    public void askForPermission(){
+        if (ActivityCompat.checkSelfPermission( this,
+        android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+        PackageManager.PERMISSION_GRANTED) {
+            String[] permissions =
+                    {android.Manifest.permission.ACCESS_FINE_LOCATION};
+            ActivityCompat.requestPermissions(this,
+                    permissions,1);
+        }
+        else{
+            createManager();
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int
+                                                   requestCode, @NonNull final String[]
+                                                   permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode,
+                permissions, grantResults);
+        if(grantResults[0] ==
+                PackageManager.PERMISSION_GRANTED) {//on a la permission
+            System.out.println("Autorisation effectuée");
+            this.createManager();
+        } else {//afficher un message d’erreur
+            System.out.println("Erreur autorisation");
+            System.exit(0);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    public void createManager(){
+        LocationListener myLocationListener = new
+                LocationListener(){
+                    @Override
+                    public void onLocationChanged(Location newLocation){
+                    }
+                    @Override
+                    public void onStatusChanged(String provider, int
+                            status, Bundle extras){
+                    }
+                    @Override
+                    public void onProviderEnabled(String provider){
+                    }
+                    @Override
+                    public void onProviderDisabled(String provider){
+                    }
+                };
+        this.locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, 120, 100,
+                myLocationListener);
+        locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER, 120, 100,
+                myLocationListener);
     }
 }
