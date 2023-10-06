@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         .OnItemSelectedListener {
     private ActivityMainBinding binding;
     PokedexFragment pokedexfragment = new PokedexFragment();
-    MapFragment mapfragment = new MapFragment();
+    //MapFragment mapfragment = new MapFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,14 +52,14 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         transaction.commit();
     }
 
-    public void showMap() {
+   /* public void showMap() {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction= manager.beginTransaction();
         MapFragment fragment = new MapFragment();
         transaction.replace(R.id.fragment_container,fragment);
         transaction.commit();
 
-    }
+    }*/
 
     private void showNoteDetail(long noteId,String number) {
         System.out.println(number);
@@ -74,14 +74,14 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                     .replace(R.id.fragment_container, pokedexfragment)
                     .commit();*/
             return true;
-        } else if (item.getItemId() == R.id.map) {
+        } /*else if (item.getItemId() == R.id.map) {
             System.out.println("appuie Map");
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, mapfragment )
                     .commit();
             return true;
-        }
+        }*/
         return false;
     }
 }
