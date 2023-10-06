@@ -1,20 +1,31 @@
 package com.example.pokemongpt;
 import android.os.Bundle;
+import android.view.MenuItem;
 
+import androidx.annotation.BoolRes;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.pokemongpt.databinding.ActivityMainBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationBarView
+        .OnItemSelectedListener {
     private ActivityMainBinding binding;
+    PokedexFragment pokedexfragment = new PokedexFragment();
+    MapFragment mapfragment = new MapFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        this.showDetails();
+        binding.bottomNavigation
+                .setOnItemSelectedListener(this);
+        binding.bottomNavigation.setSelectedItemId(R.id.pokedex);
+        this.showStartup();
     }
 
     public void showDetails() {
@@ -27,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public void showStartup() {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        PokedexFragment fragment = new PokedexFragment();
+
         OnClickOnPokemonListener listener = new OnClickOnPokemonListener(){
 
             @Override
@@ -35,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
                 showNoteDetail(noteId, number);
             }
         };
-        fragment.setOnClickOnNoteListener(listener);
-        transaction.replace(R.id.fragment_container,fragment);
+        pokedexfragment.setOnClickOnNoteListener(listener);
+        transaction.replace(R.id.fragment_container,pokedexfragment);
         transaction.commit();
     }
 
@@ -44,4 +55,23 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(number);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.pokedex){
+            this.showStartup();
+            /*getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, pokedexfragment)
+                    .commit();*/
+            return true;
+        } else if (item.getItemId() == R.id.map) {
+            System.out.println("appuie Map");
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, mapfragment )
+                    .commit();
+            return true;
+        }
+        return false;
+    }
 }
