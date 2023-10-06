@@ -57,7 +57,8 @@ public class MapFragment extends Fragment {
         GeoPoint point = new GeoPoint(location);
         binding.mapView.getController().setCenter(point);
         binding.mapView.getController().setZoom(13);
-        
+        binding.mapView.setBuiltInZoomControls(true);
+
         return binding.getRoot();
     }
 
