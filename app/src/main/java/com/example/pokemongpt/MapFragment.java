@@ -74,10 +74,23 @@ public class MapFragment extends Fragment {
     }
 
     public void updateMap() {
+        System.out.println("UPDATE !");
+
         @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         GeoPoint point = new GeoPoint(location);
+        System.out.println(point);
+
+        System.out.println(binding.mapView.getOverlays());
+
+        binding.mapView.getOverlays().remove(playerPosition);
+        binding.mapView.getOverlays().clear();
+
         this.playerPosition.setPosition(point);
-        binding.mapView.invalidate();
+        binding.mapView.getOverlays().add(playerPosition);
+
+        System.out.println(binding.mapView.getOverlays());
+
+
 
     }
 
