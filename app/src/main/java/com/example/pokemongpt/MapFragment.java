@@ -2,6 +2,7 @@ package com.example.pokemongpt;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -57,6 +58,7 @@ public class MapFragment extends Fragment {
         GeoPoint point = new GeoPoint(location);
         binding.mapView.getController().setCenter(point);
         binding.mapView.getController().setZoom(13);
+        binding.mapView.setMultiTouchControls(true);
         binding.mapView.setBuiltInZoomControls(true);
 
         return binding.getRoot();
