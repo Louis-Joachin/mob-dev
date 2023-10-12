@@ -17,17 +17,9 @@ public class DataBase {
         return instance;
     }
     private DataBase(Context context){
-        helper = new SQLiteOpenHelper(context,"Name",null,1) {
-            @Override
-            public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
-            }
-
-            @Override
-            public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
-            }
-        };
+        helper = new MySQLiteOpenHelper(context,"Name",null,1);
     }
+
+    
 
 }

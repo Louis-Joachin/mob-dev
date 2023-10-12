@@ -27,11 +27,11 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     LocationManager locationManager;
     MapFragment mapfragment;
+    DataBase dataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         this.mapfragment = new MapFragment();
         this.askForPermission();
         //this.createManager();
