@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.pokemongpt.databinding.ActivityMainBinding;
 import com.example.pokemongpt.databinding.MapFragmentBinding;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView
         .OnItemSelectedListener {
@@ -30,14 +31,15 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.mapfragment = new MapFragment();
         this.askForPermission();
-        this.createManager();
-        this.mapfragment = new MapFragment(locationManager);
+        //this.createManager();
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.bottomNavigation
                 .setOnItemSelectedListener(this);
-        binding.bottomNavigation.setSelectedItemId(R.id.map);
+        binding.bottomNavigation.setSelectedItemId(R.id.pokedex);
 
     }
 
@@ -88,12 +90,19 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                     .commit();*/
             return true;
         } else if (item.getItemId() == R.id.map) {
-            System.out.println("appuie Map");
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, mapfragment )
-                    .commit();
-            return true;
+            if(ActivityCompat.checkSelfPermission( this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                System.out.println("appuie Map");
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, mapfragment)
+                        .commit();
+                return true;
+            }else {
+                System.out.println("Permission denied");
+                return false;
+            }
         }
         return false;
     }
@@ -108,6 +117,8 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                     permissions,1);
         }
         else{
+            this.createManager();
+            mapfragment.setLocationManager(this.locationManager);
             //System.exit(0);
         }
     }
@@ -121,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 PackageManager.PERMISSION_GRANTED) {//on a la permission
             System.out.println("Autorisation effectuée");
             this.createManager();
+            mapfragment.setLocationManager(this.locationManager);
         } else {//afficher un message d’erreur
             System.out.println("Erreur autorisation");
             System.exit(0);
@@ -133,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 LocationListener(){
                     @Override
                     public void onLocationChanged(Location newLocation){
-                        mapfragment.updateMap();
+                        if(mapfragment!=null){mapfragment.updateMap();}
                     }
                     @Override
                     public void onStatusChanged(String provider, int
