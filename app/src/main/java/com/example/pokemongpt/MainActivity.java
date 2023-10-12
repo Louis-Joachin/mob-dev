@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         super.onCreate(savedInstanceState);
 
         this.mapfragment = new MapFragment();
+        this.mapfragment.setPokemonList(this.pokedexfragment.pokemonList);
         this.askForPermission();
-        //this.createManager();
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.bottomNavigation
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             this.createManager();
             mapfragment.setLocationManager(this.locationManager);
         } else {//afficher un message d’erreur
-            System.out.println("Erreur autorisation");
+            System.out.println("Erreur autorisation"); //TODO ajouter popup
             System.exit(0);
         }
     }
