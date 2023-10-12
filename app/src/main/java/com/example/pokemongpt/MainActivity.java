@@ -31,14 +31,13 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.askForPermission();
+        this.createManager();
         this.mapfragment = new MapFragment(locationManager);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.bottomNavigation
                 .setOnItemSelectedListener(this);
         binding.bottomNavigation.setSelectedItemId(R.id.map);
-
-        this.showMap(locationManager);
 
     }
 
@@ -66,14 +65,14 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         transaction.commit();
     }
 
-    public void showMap(LocationManager locationManager) {
+    /*public void showMap(LocationManager locationManager) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction= manager.beginTransaction();
         MapFragment fragment = new MapFragment(locationManager);
         transaction.replace(R.id.fragment_container,fragment);
         transaction.commit();
 
-    }
+    }*/
 
     private void showNoteDetail(long noteId,String number) {
         System.out.println(number);
@@ -109,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                     permissions,1);
         }
         else{
-            createManager();
+            //System.exit(0);
         }
     }
     @Override

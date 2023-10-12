@@ -78,19 +78,17 @@ public class MapFragment extends Fragment {
 
         @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         GeoPoint point = new GeoPoint(location);
-        System.out.println(point);
-
-        System.out.println(binding.mapView.getOverlays());
 
         binding.mapView.getOverlays().remove(playerPosition);
         binding.mapView.getOverlays().clear();
+        playerPosition.remove(binding.mapView);
 
         this.playerPosition.setPosition(point);
         binding.mapView.getOverlays().add(playerPosition);
 
-        System.out.println(binding.mapView.getOverlays());
+        binding.mapView.invalidate();
 
-
+        //System.out.println(binding.mapView.getOverlays());
 
     }
 
