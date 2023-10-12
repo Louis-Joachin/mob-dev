@@ -18,7 +18,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.pokemongpt.databinding.ActivityMainBinding;
 import com.example.pokemongpt.databinding.MapFragmentBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView
