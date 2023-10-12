@@ -34,8 +34,10 @@ public class MapFragment extends Fragment {
     MapFragmentBinding binding;
     Context context;    //  MapFragmentBinding binding;
     private MyLocationNewOverlay mLocationOverlay;
-    private LocationManager locationManager = null;
+    private LocationManager locationManager;
     Marker playerPosition;
+
+    public MapFragment(){}
 
     public MapFragment(LocationManager locationManager) {
         this.locationManager = locationManager;
@@ -69,13 +71,20 @@ public class MapFragment extends Fragment {
         playerPosition.setIcon(getResources().getDrawable(R.drawable.ic_pokemon_foreground));
         playerPosition.setTitle("Player");
         binding.mapView.getOverlays().add(playerPosition);
-
+        this.updateMap();
         return binding.getRoot();
+    }
+
+    public void setLocationManager(LocationManager locationManager){
+        this.locationManager = locationManager;
+    }
+    public LocationManager getLocationManager(){
+        return this.locationManager;
     }
 
     public void updateMap() {
         System.out.println("UPDATE !");
-
+        if (this.locationManager==null || this.binding==null){return;}
         @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         GeoPoint point = new GeoPoint(location);
 
