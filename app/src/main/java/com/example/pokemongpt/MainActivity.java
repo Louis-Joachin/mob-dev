@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import androidx.annotation.BoolRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -31,6 +32,10 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.askForPermission();
+        this.createManager();
+        this.mapfragment = new MapFragment(locationManager);
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.bottomNavigation
                 .setOnItemSelectedListener(this);
@@ -62,10 +67,10 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         transaction.commit();
     }
 
-   /* public void showMap() {
+    /*public void showMap(LocationManager locationManager) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction= manager.beginTransaction();
-        MapFragment fragment = new MapFragment();
+        MapFragment fragment = new MapFragment(locationManager);
         transaction.replace(R.id.fragment_container,fragment);
         transaction.commit();
 
