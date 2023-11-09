@@ -33,10 +33,14 @@ public class PokedexFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater,
                 R.layout.pokedex_fragment, container, false);
-
+        Bundle args = getArguments();
+        if (args != null) {
+            AppDatabase datab = args.getParcelable("appDatabase");
+            PokemonDAO pokemonDao = datab.pokemonDao();
+            List<Pokemon> pokemons = pokemonDao.getAll();
+        }
         binding.pokemonList.setLayoutManager(new LinearLayoutManager(
                 binding.getRoot().getContext()));
-
         this.importPokemonList(binding);
         PokemonListAdapter adapter = new PokemonListAdapter(pokemonList);
         binding.pokemonList.setAdapter(adapter);

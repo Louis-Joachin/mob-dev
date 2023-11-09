@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.room.Room;
 
 import com.example.pokemongpt.databinding.ActivityMainBinding;
 import com.example.pokemongpt.databinding.MapFragmentBinding;
@@ -27,20 +28,20 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     LocationManager locationManager;
     MapFragment mapfragment;
-    DataBase dataBase;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mapfragment = new MapFragment();
         this.askForPermission();
         //this.createManager();
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.bottomNavigation
                 .setOnItemSelectedListener(this);
         binding.bottomNavigation.setSelectedItemId(R.id.pokedex);
-
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database-name").allowMainThreadQueries().build();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("appDatabase", db);
+        pokedexfragment.setArguments(bundle);
     }
 
     public void showDetails(long noteId, String number) {

@@ -13,7 +13,7 @@ public interface PokemonDAO {
     @Query("SELECT * FROM pokemon")
     List<Pokemon> getAll();
 
-    @Query("SELECT * FROM pokemon WHERE order = :number")
-    Pokemon findByNumber(int number);
+    /*@Query("SELECT * FROM pokemon WHERE order = :number")
+    Pokemon findByNumber(int number);*/
 
 }
