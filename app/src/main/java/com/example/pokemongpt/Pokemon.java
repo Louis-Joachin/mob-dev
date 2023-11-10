@@ -18,6 +18,7 @@ public class Pokemon {
     private int height;
     private int weight;
     private int frontResource;
+    private int frontResourceNotFound;
     private POKEMON_TYPE type1;
     private POKEMON_TYPE type2;
     private boolean visibility;
@@ -25,14 +26,16 @@ public class Pokemon {
         order = 1;
         name = "Unknown";
         frontResource = R.drawable.p1;
+        frontResourceNotFound = R.drawable.p1_n;
         type1 = POKEMON_TYPE.Plante;
 
     }
-    public Pokemon(int order, String name, int frontResource,
+    public Pokemon(int order, String name, int frontResource,int frontResourceNotFound,
                    POKEMON_TYPE type1, POKEMON_TYPE type2) {
         this.order = order;
         this.name = name;
         this.frontResource = frontResource;
+        this.frontResourceNotFound  = frontResourceNotFound;
         this.type1 = type1;
         this.type2 = type2;
         this.visibility=false;
@@ -64,6 +67,12 @@ public class Pokemon {
     }
     public int getFrontResource() {
         return frontResource;
+    }
+    public int getFrontResourceNotFound() {
+        return frontResourceNotFound;
+    }
+    public void setFrontResourceNotFound(int frontResourceNotFound) {
+        this.frontResourceNotFound = frontResourceNotFound;
     }
     public void setFrontResource(int frontResource) {
         this.frontResource = frontResource;

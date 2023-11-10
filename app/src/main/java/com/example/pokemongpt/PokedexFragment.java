@@ -84,12 +84,14 @@ public class PokedexFragment extends Fragment {
                 String type2 = null;
                 int id = getResources().getIdentifier(image,"drawable",
                         binding.getRoot().getContext().getPackageName());
+                int idNotFound=getResources().getIdentifier(image+"_n","drawable",
+                        binding.getRoot().getContext().getPackageName());
                 if (object.has("type2")) {
                     type2 = object.getString("type2");
-                    pokemon = new Pokemon(i, name, id, POKEMON_TYPE.valueOf(type1), POKEMON_TYPE.valueOf(type2));
+                    pokemon = new Pokemon(i, name, id,idNotFound, POKEMON_TYPE.valueOf(type1), POKEMON_TYPE.valueOf(type2));
                 }
                 else{
-                    pokemon = new Pokemon(i,name,id,POKEMON_TYPE.valueOf(type1),null);
+                    pokemon = new Pokemon(i,name,id,idNotFound,POKEMON_TYPE.valueOf(type1),null);
                 }
 
                 pokemonList.add(pokemon);
