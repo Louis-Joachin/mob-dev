@@ -6,7 +6,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +17,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.room.Room;
 
 import com.example.pokemongpt.databinding.ActivityMainBinding;
 import com.example.pokemongpt.map.CaptureListener;
@@ -25,12 +29,13 @@ import com.google.android.material.navigation.NavigationBarView;
 public class MainActivity extends AppCompatActivity implements NavigationBarView
         .OnItemSelectedListener {
     private ActivityMainBinding binding;
+    private MyThread myThread;
     PokedexFragment pokedexfragment = new PokedexFragment();
-
     LocationManager locationManager;
     MapFragment mapfragment;
     User user = new User("John Doe","john.doe@gmail.com");
     UserFragment userfragment = new UserFragment(user);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         binding.bottomNavigation
                 .setOnItemSelectedListener(this);
         binding.bottomNavigation.setSelectedItemId(R.id.pokedex);
-
     }
 
     public void showDetails(long noteId, String number) {

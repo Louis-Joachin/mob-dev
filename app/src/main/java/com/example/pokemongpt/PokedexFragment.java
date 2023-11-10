@@ -1,6 +1,8 @@
 package com.example.pokemongpt;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PokedexFragment extends Fragment {
+    AppDatabase db;
     List<Pokemon> pokemonList = new ArrayList<>();
     PokedexFragmentBinding binding =null;
     @Nullable
@@ -33,10 +36,8 @@ public class PokedexFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater,
                 R.layout.pokedex_fragment, container, false);
-
         binding.pokemonList.setLayoutManager(new LinearLayoutManager(
                 binding.getRoot().getContext()));
-
         this.importPokemonList(binding);
         PokemonListAdapter adapter = new PokemonListAdapter(pokemonList);
         binding.pokemonList.setAdapter(adapter);
@@ -45,6 +46,15 @@ public class PokedexFragment extends Fragment {
     }
 
     public void importPokemonList(PokedexFragmentBinding binding){
+        MyThreadEventListener listener = dataList -> new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Fini");
+            }
+        });
+        MyThread myThread = new MyThread(listener, binding.getRoot().getContext());
+        // Démarrer le thread
+        myThread.start();
         //Ouverture du fichier res/raw
         InputStreamReader isr = new InputStreamReader(getResources().openRawResource(R.raw.poke));
         // Ouverture du fichier dans assets
@@ -74,15 +84,24 @@ public class PokedexFragment extends Fragment {
                 String type2 = null;
                 int id = getResources().getIdentifier(image,"drawable",
                         binding.getRoot().getContext().getPackageName());
+                int idNotFound=getResources().getIdentifier(image+"_n","drawable",
+                        binding.getRoot().getContext().getPackageName());
                 if (object.has("type2")) {
                     type2 = object.getString("type2");
-                    pokemon = new Pokemon(i, name, id, POKEMON_TYPE.valueOf(type1), POKEMON_TYPE.valueOf(type2));
+                    pokemon = new Pokemon(i, name, id,idNotFound, POKEMON_TYPE.valueOf(type1), POKEMON_TYPE.valueOf(type2));
                 }
                 else{
-                    pokemon = new Pokemon(i,name,id,POKEMON_TYPE.valueOf(type1),null);
+                    pokemon = new Pokemon(i,name,id,idNotFound,POKEMON_TYPE.valueOf(type1),null);
                 }
+
                 pokemonList.add(pokemon);
             }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    myThread.insertPokemons(pokemonList);
+                }
+            }).start();
         } catch (JSONException e) {
             e.printStackTrace();
         }

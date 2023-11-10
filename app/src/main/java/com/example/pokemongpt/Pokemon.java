@@ -1,25 +1,44 @@
 package com.example.pokemongpt;
+
+import android.opengl.Visibility;
+
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import org.jetbrains.annotations.NotNull;
+
+import kotlin.experimental.ExperimentalTypeInference;
+
+@Entity
 public class Pokemon {
+    @PrimaryKey
+    @NotNull
     private int order;
     private String name;
     private int height;
     private int weight;
     private int frontResource;
+    private int frontResourceNotFound;
     private POKEMON_TYPE type1;
     private POKEMON_TYPE type2;
+    private boolean visibility;
     public Pokemon() {
         order = 1;
         name = "Unknown";
         frontResource = R.drawable.p1;
+        frontResourceNotFound = R.drawable.p1_n;
         type1 = POKEMON_TYPE.Plante;
+
     }
-    public Pokemon(int order, String name, int frontResource,
+    public Pokemon(int order, String name, int frontResource,int frontResourceNotFound,
                    POKEMON_TYPE type1, POKEMON_TYPE type2) {
         this.order = order;
         this.name = name;
         this.frontResource = frontResource;
+        this.frontResourceNotFound  = frontResourceNotFound;
         this.type1 = type1;
         this.type2 = type2;
+        this.visibility=false;
     }
 
     public String getName() {
@@ -49,6 +68,12 @@ public class Pokemon {
     public int getFrontResource() {
         return frontResource;
     }
+    public int getFrontResourceNotFound() {
+        return frontResourceNotFound;
+    }
+    public void setFrontResourceNotFound(int frontResourceNotFound) {
+        this.frontResourceNotFound = frontResourceNotFound;
+    }
     public void setFrontResource(int frontResource) {
         this.frontResource = frontResource;
     }
@@ -70,4 +95,6 @@ public class Pokemon {
     public String getType2String() {
         return type2.name();
     }
+    public boolean getVisibility(){return visibility;}
+    public void setVisibility(boolean visibility){this.visibility=visibility;}
 }

@@ -36,13 +36,11 @@ public class PokemonDetailsFragment extends Fragment{
         PokemonDetailsBinding binding = DataBindingUtil.inflate(inflater,
                 R.layout.pokemon_details, container, false);
         this.importPokemon(binding,number);
-        System.out.println(pokemon.getName());
-
         PokemonViewModel viewmodel = new PokemonViewModel();
         viewmodel.setPokemon(pokemon);
         binding.setPokemonViewModel(viewmodel);
 
-        return binding.getRoot();
+         return binding.getRoot();
     }
     public void importPokemon(PokemonDetailsBinding binding, String number){
         //Ouverture du fichier res/raw
@@ -74,12 +72,14 @@ public class PokemonDetailsFragment extends Fragment{
             String type2 = null;
             int id = getResources().getIdentifier(image,"drawable",
                     binding.getRoot().getContext().getPackageName());
+            int idNotFound=getResources().getIdentifier(image+"_n","drawable",
+                    binding.getRoot().getContext().getPackageName());
             if (object.has("type2")) {
                 type2 = object.getString("type2");
-                this.pokemon = new Pokemon(intNumber, name, id, POKEMON_TYPE.valueOf(type1), POKEMON_TYPE.valueOf(type2));
+                this.pokemon = new Pokemon(intNumber, name, id,idNotFound, POKEMON_TYPE.valueOf(type1), POKEMON_TYPE.valueOf(type2));
             }
             else{
-                this.pokemon = new Pokemon(intNumber,name,id,POKEMON_TYPE.valueOf(type1),null);
+                this.pokemon = new Pokemon(intNumber,name,id,idNotFound,POKEMON_TYPE.valueOf(type1),null);
             }
         } catch (JSONException e) {
             e.printStackTrace();

@@ -15,7 +15,11 @@ public class PokemonViewModel extends BaseObservable {
     }
     @Bindable
     public int getFront() {
-        return pokemon.getFrontResource();
+        int ret = pokemon.getFrontResource();
+        if(!pokemon.getVisibility()){
+            ret = pokemon.getFrontResourceNotFound();
+        }
+        return ret;
     }
     @Bindable
     public String getName() {
@@ -44,4 +48,5 @@ public class PokemonViewModel extends BaseObservable {
     }
     public int getHeight() { return pokemon.getHeight(); }
     public int getWeight() { return pokemon.getWeight(); }
+    public int getFrontNotFound() {return pokemon.getFrontResourceNotFound();}
 }
