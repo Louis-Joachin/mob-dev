@@ -1,9 +1,7 @@
-package com.example.pokemongpt;
+package com.example.pokemongpt.map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -12,26 +10,22 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.pokemongpt.Pokemon;
+import com.example.pokemongpt.R;
 import com.example.pokemongpt.databinding.MapFragmentBinding;
 
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
@@ -46,7 +40,8 @@ public class MapFragment extends Fragment {
     private LocationManager locationManager;
     private List<Pokemon> pokemonList;
     private static int markerId = 0;
-    private List<Pokemon_on_map> listPokemonOnMap = new ArrayList<Pokemon_on_map>();;
+    private List<Pokemon_on_map> listPokemonOnMap = new ArrayList<Pokemon_on_map>();
+    CaptureListener listener;
     Marker playerPosition;
 
     public MapFragment(){}
@@ -109,8 +104,6 @@ public class MapFragment extends Fragment {
 
         binding.mapView.getController().setCenter(point);
 
-        binding.mapView.invalidate();
-
         this.managePokemonsOnMap();
 
     }
@@ -156,13 +149,26 @@ public class MapFragment extends Fragment {
             pokemonMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
-                    System.out.println("Que le combat commence !!!");
+                    capturePokemon(marker);
                     return true;
                 }
             });
 
             listPokemonOnMap.add(new Pokemon_on_map(pokemon,pokemonMarker));
         }
+    }
+
+    public void capturePokemon(Marker marker){
+        ListIterator<Pokemon_on_map> iterator = listPokemonOnMap.listIterator();
+        Pokemon_on_map pokemonOnMap;
+        while(iterator.hasNext()){
+            pokemonOnMap = iterator.next();
+            if(pokemonOnMap.marker == marker){
+                listener.onClickOnMarker(pokemonOnMap);
+                iterator.remove();
+            }
+        }
+        this.managePokemonsOnMap();
     }
 
     public void managePokemonsOnMap(){
@@ -187,6 +193,8 @@ public class MapFragment extends Fragment {
             generatePokemonsOnMap(50 - listPokemonOnMap.size());
         }
         drawPokemonsOnMap();
+        binding.mapView.invalidate();
+
     }
 
     public Drawable getImage(Context context, int res) {
@@ -223,5 +231,9 @@ public class MapFragment extends Fragment {
     private int getMarkerId(){
         markerId ++;
         return markerId;
+    }
+
+    public void setCaptureListener(CaptureListener listener){
+        this.listener = listener;
     }
 }

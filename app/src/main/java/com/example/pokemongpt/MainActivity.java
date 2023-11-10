@@ -16,10 +16,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.pokemongpt.databinding.ActivityMainBinding;
-import com.example.pokemongpt.databinding.MapFragmentBinding;
+import com.example.pokemongpt.map.CaptureListener;
+import com.example.pokemongpt.map.MapFragment;
+import com.example.pokemongpt.user.User;
 import com.example.pokemongpt.user.UserFragment;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView
         .OnItemSelectedListener {
@@ -28,7 +29,8 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     LocationManager locationManager;
     MapFragment mapfragment;
-    UserFragment userfragment = new UserFragment();
+    User user = new User("John Doe","john.doe@gmail.com");
+    UserFragment userfragment = new UserFragment(user);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,17 +92,27 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                     .replace(R.id.fragment_container, pokedexfragment)
                     .commit();*/
             return true;
+
         } else if (item.getItemId() == R.id.map) {
             if(ActivityCompat.checkSelfPermission( this,
                     android.Manifest.permission.ACCESS_FINE_LOCATION) ==
                     PackageManager.PERMISSION_GRANTED) {
                 System.out.println("appuie Map");
+
+                CaptureListener listener = new CaptureListener() {
+                    @Override
+                    public void onClickOnMarker(Pokemon pokemon) {
+                        user.addPokemon(pokemon);
+                    }
+                };
+                mapfragment.setCaptureListener(listener);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container, mapfragment)
                         .commit();
                 return true;
             }
+
             else {
                 System.out.println("Permission denied");
                 return false;
