@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,12 +29,14 @@ import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 
 public class MapFragment extends Fragment {
@@ -42,6 +45,8 @@ public class MapFragment extends Fragment {
     private MyLocationNewOverlay mLocationOverlay;
     private LocationManager locationManager;
     private List<Pokemon> pokemonList;
+    private static int markerId = 0;
+    private List<Pokemon_on_map> listPokemonOnMap = new ArrayList<Pokemon_on_map>();;
     Marker playerPosition;
 
     public MapFragment(){}
@@ -79,7 +84,7 @@ public class MapFragment extends Fragment {
         playerPosition.setTitle("Player");
         binding.mapView.getOverlays().add(playerPosition);
 
-        this.populateMap();
+        this.generatePokemonsOnMap(50);
         this.updateMap();
         return binding.getRoot();
     }
@@ -98,7 +103,6 @@ public class MapFragment extends Fragment {
         GeoPoint point = new GeoPoint(location);
 
         binding.mapView.getOverlays().remove(playerPosition);
-        playerPosition.remove(binding.mapView);
 
         this.playerPosition.setPosition(point);
         binding.mapView.getOverlays().add(playerPosition);
@@ -107,14 +111,34 @@ public class MapFragment extends Fragment {
 
         binding.mapView.invalidate();
 
+        this.managePokemonsOnMap();
+
+    }
+    public void drawPokemonsOnMap(){
+        ListIterator<Pokemon_on_map> iterator = listPokemonOnMap.listIterator();
+        Pokemon_on_map pokemonOnMap;
+
+        while (iterator.hasNext()){
+            pokemonOnMap = iterator.next();
+            binding.mapView.getOverlays().add(pokemonOnMap.marker);
+        }
     }
 
-    public void populateMap(){
+    public void erasePokemonsOnMap(){
+        ListIterator<Pokemon_on_map> iterator = listPokemonOnMap.listIterator();
+        Pokemon_on_map pokemonOnMap;
+
+        while (iterator.hasNext()){
+            pokemonOnMap = iterator.next();
+            binding.mapView.getOverlays().remove(pokemonOnMap.marker);
+        }
+    }
+
+    public void generatePokemonsOnMap(int pokemonsToGenerate){
         @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         GeoPoint playerPoint = new GeoPoint(location);
-        List<Pokemon_on_map> listPokemonOnMap = new ArrayList<Pokemon_on_map>();
-        
-        for(int i=0; i<50; i++){
+
+        for(int i=0; i<pokemonsToGenerate; i++){
             GeoPoint pokemonPosition;
             Marker pokemonMarker;
 
@@ -125,13 +149,44 @@ public class MapFragment extends Fragment {
             Pokemon pokemon = this.pokemonList.get(rand.nextInt(pokemonList.size()));
 
             pokemonMarker.setPosition(pokemonPosition);
+            pokemonMarker.setId(String.valueOf(getMarkerId()));
             pokemonMarker.setAnchor(Marker.ANCHOR_CENTER,Marker.ANCHOR_CENTER);
             pokemonMarker.setIcon(getResources().getDrawable(pokemon.getFrontResource()));
-            pokemonMarker.setTitle("Pokemon");
-            binding.mapView.getOverlays().add(pokemonMarker);
+            pokemonMarker.setTitle(pokemon.getName());
+            pokemonMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    System.out.println("Que le combat commence !!!");
+                    return true;
+                }
+            });
 
             listPokemonOnMap.add(new Pokemon_on_map(pokemon,pokemonMarker));
         }
+    }
+
+    public void managePokemonsOnMap(){
+        @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        erasePokemonsOnMap();
+
+        double coordinatesGap = 0.01;
+        ListIterator<Pokemon_on_map> iterator = listPokemonOnMap.listIterator();
+        Pokemon_on_map pokemonOnMap;
+        while(iterator.hasNext()){
+            pokemonOnMap = iterator.next();
+
+            if(Math.abs(pokemonOnMap.marker.getPosition().getLatitude() - location.getLatitude()) > coordinatesGap ||
+                    Math.abs(pokemonOnMap.marker.getPosition().getLongitude() - location.getLongitude())> coordinatesGap){
+                iterator.remove();
+            }
+
+        }
+
+        if(50 - listPokemonOnMap.size() > 0){
+            generatePokemonsOnMap(50 - listPokemonOnMap.size());
+        }
+        drawPokemonsOnMap();
     }
 
     public Drawable getImage(Context context, int res) {
@@ -163,5 +218,10 @@ public class MapFragment extends Fragment {
         double randomLon = longitude - coordinatesGap + Math.random() * (2 * coordinatesGap);
 
         return new GeoPoint(randomLat,randomLon);
+    }
+
+    private int getMarkerId(){
+        markerId ++;
+        return markerId;
     }
 }

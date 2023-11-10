@@ -1,4 +1,4 @@
-package com.example.pokemongpt;
+package com.example.pokemongpt.user;
 
 import com.example.pokemongpt.Pokemon;
 
@@ -10,13 +10,14 @@ public class User {
     private String email;
     private static int currentId;
     private int user_id;
+    private Inventory inventory = new Inventory();
     private List<Pokemon> userPokemonList;
-    public void User(String nickname_parameter){
+    public User(String nickname_parameter){
         String nickname = nickname_parameter;
         this.user_id = getId();
     }
     private int getId(){
-        this.currentId ++;
+        currentId ++;
         return currentId;
     }
 
@@ -25,10 +26,10 @@ public class User {
     }
 
     public void releasePokemon(Pokemon pokemonToRemove){
-        ListIterator iterator = userPokemonList.listIterator();
+        ListIterator<Pokemon> iterator = userPokemonList.listIterator();
         Pokemon currentPokemon;
         while(iterator.hasNext()) {
-            currentPokemon = (Pokemon) iterator.next();
+            currentPokemon = iterator.next();
             if (currentPokemon.equals(pokemonToRemove)) {
                 iterator.remove();
             }
