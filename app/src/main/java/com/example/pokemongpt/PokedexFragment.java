@@ -1,6 +1,8 @@
 package com.example.pokemongpt;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PokedexFragment extends Fragment {
+    AppDatabase db;
     List<Pokemon> pokemonList = new ArrayList<>();
     PokedexFragmentBinding binding =null;
     @Nullable
@@ -33,12 +36,6 @@ public class PokedexFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater,
                 R.layout.pokedex_fragment, container, false);
-        Bundle args = getArguments();
-        if (args != null) {
-            AppDatabase datab = args.getParcelable("appDatabase");
-            PokemonDAO pokemonDao = datab.pokemonDao();
-            List<Pokemon> pokemons = pokemonDao.getAll();
-        }
         binding.pokemonList.setLayoutManager(new LinearLayoutManager(
                 binding.getRoot().getContext()));
         this.importPokemonList(binding);
@@ -49,6 +46,15 @@ public class PokedexFragment extends Fragment {
     }
 
     public void importPokemonList(PokedexFragmentBinding binding){
+        MyThreadEventListener listener = dataList -> new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Fini");
+            }
+        });
+        MyThread myThread = new MyThread(listener, binding.getRoot().getContext());
+        // Démarrer le thread
+        myThread.start();
         //Ouverture du fichier res/raw
         InputStreamReader isr = new InputStreamReader(getResources().openRawResource(R.raw.poke));
         // Ouverture du fichier dans assets
@@ -85,8 +91,15 @@ public class PokedexFragment extends Fragment {
                 else{
                     pokemon = new Pokemon(i,name,id,POKEMON_TYPE.valueOf(type1),null);
                 }
+
                 pokemonList.add(pokemon);
             }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    myThread.insertPokemons(pokemonList);
+                }
+            }).start();
         } catch (JSONException e) {
             e.printStackTrace();
         }

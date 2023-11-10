@@ -6,7 +6,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +27,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity implements NavigationBarView
         .OnItemSelectedListener {
     private ActivityMainBinding binding;
+    private MyThread myThread;
     PokedexFragment pokedexfragment = new PokedexFragment();
-
     LocationManager locationManager;
     MapFragment mapfragment;
     @Override
@@ -38,10 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         binding.bottomNavigation
                 .setOnItemSelectedListener(this);
         binding.bottomNavigation.setSelectedItemId(R.id.pokedex);
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database-name").allowMainThreadQueries().build();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("appDatabase", db);
-        pokedexfragment.setArguments(bundle);
+
     }
 
     public void showDetails(long noteId, String number) {
