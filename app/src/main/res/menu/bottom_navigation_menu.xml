@@ -10,4 +10,9 @@
         android:enabled="true"
         android:icon="@drawable/combat"
         android:title="Map"/>
+    <item
+        android:id="@+id/user"
+        android:enabled="true"
+        android:icon="@drawable/person"
+        android:title="My Profile"/>
 </menu>

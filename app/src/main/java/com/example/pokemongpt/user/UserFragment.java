@@ -12,9 +12,10 @@ import androidx.fragment.app.Fragment;
 
 import com.example.pokemongpt.R;
 import com.example.pokemongpt.databinding.MapFragmentBinding;
+import com.example.pokemongpt.databinding.UserFragmentBinding;
 
 public class UserFragment extends Fragment {
-    MapFragmentBinding binding;
+    UserFragmentBinding binding;
 
     @Nullable
     @Override

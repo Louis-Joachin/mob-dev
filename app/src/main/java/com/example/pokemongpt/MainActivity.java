@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.pokemongpt.databinding.ActivityMainBinding;
 import com.example.pokemongpt.databinding.MapFragmentBinding;
+import com.example.pokemongpt.user.UserFragment;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     LocationManager locationManager;
     MapFragment mapfragment;
-
+    UserFragment userfragment = new UserFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,10 +100,19 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                         .replace(R.id.fragment_container, mapfragment)
                         .commit();
                 return true;
-            }else {
+            }
+            else {
                 System.out.println("Permission denied");
                 return false;
             }
+
+        }
+        else if (item.getItemId() == R.id.user) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, userfragment)
+                    .commit();
+            return true;
         }
         return false;
     }
